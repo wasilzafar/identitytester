@@ -1,8 +1,0 @@
-com\wasil\saml\sp\AssertionConsumerServlet.class
-com\wasil\saml\idp\IDPSSOServlet.class
-com\wasil\saml\common\ConfigManager.class
-com\wasil\saml\listener\AppConfigListener.class
-com\wasil\saml\common\SAMLInputContainer.class
-com\wasil\saml\common\SAMLWriter.class
-com\wasil\saml\common\SignAssertion.class
-com\wasil\saml\sp\AuthTriggerServlet.class
