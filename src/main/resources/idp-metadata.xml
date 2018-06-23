@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" validUntil="2017-07-25T06:48:28Z" cacheDuration="PT1501397308S" entityID="http://idp.wasilzafar.com/">
+  <md:IDPSSODescriptor WantAuthnRequestsSigned="false" protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+    <md:KeyDescriptor use="signing">
+      <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+        <ds:X509Data>
+          <ds:X509Certificate>MIIDdDCCAlygAwIBAgIEWW9HrjANBgkqhkiG9w0BAQsFADB8MR4wHAYJKoZIhvcN
+AQkBFg96YWZhckBhZG9iZS5jb20xCzAJBgNVBAYTAmluMQswCQYDVQQIDAJ1cDEO
+MAwGA1UEBwwFbm9pZGExDjAMBgNVBAoMBWFkb2JlMRAwDgYDVQQLDAdzdXBwb3J0
+MQ4wDAYDVQQDDAV6YWZhcjAeFw0xNzA3MTkxMTUyMTRaFw0yMjA3MTkxMTUyMTRa
+MHwxHjAcBgkqhkiG9w0BCQEWD3phZmFyQGFkb2JlLmNvbTELMAkGA1UEBhMCaW4x
+CzAJBgNVBAgMAnVwMQ4wDAYDVQQHDAVub2lkYTEOMAwGA1UECgwFYWRvYmUxEDAO
+BgNVBAsMB3N1cHBvcnQxDjAMBgNVBAMMBXphZmFyMIIBIjANBgkqhkiG9w0BAQEF
+AAOCAQ8AMIIBCgKCAQEA16MtQWPAU4y+M+qEtpsj+y4S9lodRgVNxgvsNfxkl7jX
+S4Gw203JNvyTsy05kLiprOga3rPjE5sImWJX58FM0bEjvPigm1rdCeq6jJFp4OKA
+QiM4rhbjqnYdl6zyMMa/qUEvgerSbmfRs2kUnyRki4dOldI/dCQNKyOwJh2KpnVH
+WR1Av9znO4dp7fhkd/BSyda7PW9SNmZ7UsWqEq7Uw/SCc0IJ6ze6kIUvcubG+jfE
+8/4TrEkMEl00qND/r7pFmNx3VVq5DuJ15JPETOVnvYPWKCMDB90F0+qgQnGkHgAR
+J7hFqYZ5BTBnpllFQa/DJxZf2DKy1YUDOCgUNV3MhQIDAQABMA0GCSqGSIb3DQEB
+CwUAA4IBAQCipRuyT2JiD/X7XChhC3vQq4nhK4AyxeB/Dhnn16Gu+BK6kZLe66z0
+U1twjgQraVr2Zm9l+FZJbn90OU5AM4d9c3ZgvEanHO+bKbOny9NXLT+otg/e4ylg
+DnvXm9euETuRjiNcAcKzyrTWIITVVdZy8LXOD7DDSss33rCs0rWqdSyFn7dB1xNa
+ENNFf4IqJ1LgtC9C0BvBrWvZb4qp6Dbxwv0Gr4aeCjRgPI833wjwGTmY1S134vAa
+t/o1QAZp9XplDF5RTRuY03EKo7fvl+KzIPxztgI22tWJ1O+0LU6J8LrFV0Y9tT47
+Wv+AIMtRdvJVKajl8x2a09Fj1ni4ogAX</ds:X509Certificate>
+        </ds:X509Data>
+      </ds:KeyInfo>
+    </md:KeyDescriptor>
+    <md:KeyDescriptor use="encryption">
+      <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+        <ds:X509Data>
+          <ds:X509Certificate>MIIDdDCCAlygAwIBAgIEWW9HrjANBgkqhkiG9w0BAQsFADB8MR4wHAYJKoZIhvcN
+AQkBFg96YWZhckBhZG9iZS5jb20xCzAJBgNVBAYTAmluMQswCQYDVQQIDAJ1cDEO
+MAwGA1UEBwwFbm9pZGExDjAMBgNVBAoMBWFkb2JlMRAwDgYDVQQLDAdzdXBwb3J0
+MQ4wDAYDVQQDDAV6YWZhcjAeFw0xNzA3MTkxMTUyMTRaFw0yMjA3MTkxMTUyMTRa
+MHwxHjAcBgkqhkiG9w0BCQEWD3phZmFyQGFkb2JlLmNvbTELMAkGA1UEBhMCaW4x
+CzAJBgNVBAgMAnVwMQ4wDAYDVQQHDAVub2lkYTEOMAwGA1UECgwFYWRvYmUxEDAO
+BgNVBAsMB3N1cHBvcnQxDjAMBgNVBAMMBXphZmFyMIIBIjANBgkqhkiG9w0BAQEF
+AAOCAQ8AMIIBCgKCAQEA16MtQWPAU4y+M+qEtpsj+y4S9lodRgVNxgvsNfxkl7jX
+S4Gw203JNvyTsy05kLiprOga3rPjE5sImWJX58FM0bEjvPigm1rdCeq6jJFp4OKA
+QiM4rhbjqnYdl6zyMMa/qUEvgerSbmfRs2kUnyRki4dOldI/dCQNKyOwJh2KpnVH
+WR1Av9znO4dp7fhkd/BSyda7PW9SNmZ7UsWqEq7Uw/SCc0IJ6ze6kIUvcubG+jfE
+8/4TrEkMEl00qND/r7pFmNx3VVq5DuJ15JPETOVnvYPWKCMDB90F0+qgQnGkHgAR
+J7hFqYZ5BTBnpllFQa/DJxZf2DKy1YUDOCgUNV3MhQIDAQABMA0GCSqGSIb3DQEB
+CwUAA4IBAQCipRuyT2JiD/X7XChhC3vQq4nhK4AyxeB/Dhnn16Gu+BK6kZLe66z0
+U1twjgQraVr2Zm9l+FZJbn90OU5AM4d9c3ZgvEanHO+bKbOny9NXLT+otg/e4ylg
+DnvXm9euETuRjiNcAcKzyrTWIITVVdZy8LXOD7DDSss33rCs0rWqdSyFn7dB1xNa
+ENNFf4IqJ1LgtC9C0BvBrWvZb4qp6Dbxwv0Gr4aeCjRgPI833wjwGTmY1S134vAa
+t/o1QAZp9XplDF5RTRuY03EKo7fvl+KzIPxztgI22tWJ1O+0LU6J8LrFV0Y9tT47
+Wv+AIMtRdvJVKajl8x2a09Fj1ni4ogAX</ds:X509Certificate>
+        </ds:X509Data>
+      </ds:KeyInfo>
+    </md:KeyDescriptor>
+    <md:NameIDFormat>urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified</md:NameIDFormat>
+    <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="http://localhost:8080/idpsp/SSO"/>
+  </md:IDPSSODescriptor>
+  <md:Organization>
+    <md:OrganizationName xml:lang="en-US">Identity Tester</md:OrganizationName>
+    <md:OrganizationDisplayName xml:lang="en-US">ID Tester</md:OrganizationDisplayName>
+    <md:OrganizationURL xml:lang="en-US">http://localhost:8080/idpsp/</md:OrganizationURL>
+  </md:Organization>
+  <md:ContactPerson contactType="technical">
+    <md:GivenName>WASIL ZAFAR</md:GivenName>
+    <md:EmailAddress>wasil.zafar@gmail.com</md:EmailAddress>
+  </md:ContactPerson>
+  <md:ContactPerson contactType="support">
+    <md:GivenName>WASIL ZAFAR</md:GivenName>
+    <md:EmailAddress>wasil.zafar@gmail.com</md:EmailAddress>
+  </md:ContactPerson>
+</md:EntityDescriptor>
