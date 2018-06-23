@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata"
+                     validUntil="2017-11-20T09:47:11Z"
+                     cacheDuration="PT604800S"
+                     entityID="http://sp.wasilzafar.com/">
+    <md:SPSSODescriptor AuthnRequestsSigned="false" WantAssertionsSigned="true" protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+        <md:SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
+                                Location="http://localhost:8989/idpsp/SLO" />
+        <md:NameIDFormat>urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified</md:NameIDFormat>
+        <md:AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+                                     Location="http://localhost:8989/idpsp/acs"
+                                     index="1" />
+        
+    </md:SPSSODescriptor>
+    <md:Organization>
+       <md:OrganizationName xml:lang="en-US">Zafar Inc.</md:OrganizationName>
+       <md:OrganizationDisplayName xml:lang="en-US">Zafar Associates.</md:OrganizationDisplayName>
+       <md:OrganizationURL xml:lang="en-US">http://www.wasilzafar.com/</md:OrganizationURL>
+    </md:Organization>
+</md:EntityDescriptor>
