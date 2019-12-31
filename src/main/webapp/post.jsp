@@ -16,8 +16,8 @@
 
     <form method="post" action="<% out.println(request.getAttribute("url")); %>">
         <input type="submit" style="display:none;" />
-
         <input type="hidden" name="<%=request.getAttribute("parameterName")%>" value="<%=request.getAttribute("assertion")%>" />
+        <input type="hidden" name="protocol" value="<%=request.getAttribute("protocol")%>" />
 
         <noscript>
             <input type="submit" value="Submit" />

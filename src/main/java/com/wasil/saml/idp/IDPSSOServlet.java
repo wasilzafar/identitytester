@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.zip.Deflater;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.Inflater;
@@ -22,8 +23,10 @@ import org.opensaml.xml.util.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.opensaml.Configuration;
+import org.opensaml.saml2.core.Artifact;
 import org.opensaml.saml2.core.AuthnRequest;
 import org.opensaml.saml2.core.Response;
+import org.opensaml.saml2.core.impl.ArtifactBuilder;
 import org.opensaml.xml.XMLObject;
 import org.opensaml.xml.io.Unmarshaller;
 import org.opensaml.xml.io.UnmarshallerFactory;
@@ -49,24 +52,35 @@ public class IDPSSOServlet extends HttpServlet {
 		response.getWriter().print("<html><body><p>IDPSSOServlet: Served at: " + request.getContextPath()+"</p>");
 		response.getWriter().print("<p>"+"IDPSSOServlet: SAMLRequest parameter recieved ! "+"</p>");
 		String carryOnProcessing = request.getParameter("continue");
-		if (carryOnProcessing != null) 
-			processAndForwardResponse(request.getParameter("PreservedAuthRequest"), request, response, true);
-		else
+		if (carryOnProcessing != null){ 
+			if(carryOnProcessing.equalsIgnoreCase("continueWithPost")||carryOnProcessing.equalsIgnoreCase("continueWithRedirect"))
+				processAndForwardResponse(request.getParameter("PreservedAuthRequest"), request, response, true);
+			else
+				sendArtifact(request.getParameter("PreservedAuthRequest"), request, response);
+		}else
 			displayAuthnRequest(request.getParameter("SAMLRequest"), request, response);
 
 	}
 
+	private void sendArtifact(String parameter, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		response.sendRedirect(ConfigManager.getAcsRecipientUrl()+ "?SAMLart=AAQAAMFbLinlXaCM%2BFIxiDwGOLAy2T71gbpO7ZhNzAgEANlB90ECfpNEVLg%3D");
+        		
+	}
+
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		boolean post = true;
 		response.setContentType("text/html");
 		response.getWriter().print("<html><body><p>IDPSSOServlet: Served at: " + request.getContextPath()+"</p>");
 		response.getWriter().print("<p>"+"IDPSSOServlet: SAMLRequest parameter recieved ! "+"</p>");
 		String carryOnProcessing = request.getParameter("continue");
-		if (carryOnProcessing != null) 
-			processAndForwardResponse(request.getParameter("PreservedAuthRequest"), request, response, post);
-		else
+		if (carryOnProcessing != null){ 
+			if(carryOnProcessing.equalsIgnoreCase("continueWithPost")||carryOnProcessing.equalsIgnoreCase("continueWithRedirect"))
+				processAndForwardResponse(request.getParameter("PreservedAuthRequest"), request, response, true);
+			else
+				sendArtifact(request.getParameter("PreservedAuthRequest"), request, response);
+		}else
 			displayAuthnRequest(request.getParameter("SAMLRequest"), request, response);
+
 	}
 
 	private void processAndForwardResponse(String SAMLRequest, HttpServletRequest request, HttpServletResponse response,
@@ -138,8 +152,8 @@ public class IDPSSOServlet extends HttpServlet {
 				SAMLRequest = new String(xmlMessageBytes, 0, resultLength, "UTF-8");
 				logger.info("The deflated SAMLRequest is : " + SAMLRequest);
 			} catch (Exception e) {
-				logger.error(
-						"Exception during inflation attempt. Data might be already deflated."+e);
+				logger.warn(
+						"Exception during inflation attempt. Data might be already deflated - HTTP POST Binding."+e);
 			}
 		}
 		ByteArrayInputStream is = new ByteArrayInputStream(SAMLRequest.getBytes("UTF-8"));
@@ -171,4 +185,13 @@ public class IDPSSOServlet extends HttpServlet {
 			input.setAttributes(customAttributes);
 			return new SignAssertion().createSignedResponse(input);
 	}
+	
+	
+	public Artifact buildArtifact() {
+	    String artifactId = UUID.randomUUID().toString().replaceAll("-", "");
+	    ArtifactBuilder artifactBuilder = new ArtifactBuilder();	    
+	    Artifact artifact = (Artifact) artifactBuilder.buildObject();
+	    artifact.setArtifact(artifactId);
+	    return artifact;
+	  }
 }

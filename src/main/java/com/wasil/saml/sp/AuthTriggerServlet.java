@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Properties;
 import java.util.Random;
 import java.util.zip.Deflater;
 import java.util.zip.DeflaterOutputStream;
@@ -14,7 +15,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.joda.time.DateTime;
 import org.opensaml.common.SAMLVersion;
 import org.opensaml.saml2.core.AuthnContext;
@@ -35,7 +35,6 @@ import org.opensaml.xml.util.Base64;
 import org.opensaml.xml.util.XMLHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import com.wasil.saml.common.ConfigManager;
 
 public class AuthTriggerServlet extends HttpServlet {
@@ -44,6 +43,7 @@ public class AuthTriggerServlet extends HttpServlet {
 	
 	public static final String REDIRECT = "redirect";
 	public static final String POST = "post";
+	public static final String ARTIFACT = "artifact";
 	public static final String RELOAD = "reload";
 	
 	@Override
@@ -60,8 +60,28 @@ public class AuthTriggerServlet extends HttpServlet {
 				req.setAttribute("assertion", buildAuthnRequest(true));
 				req.setAttribute("url", ConfigManager.getSinglesignonDestinationUrl());
 				req.setAttribute("parameterName", "SAMLRequest");
+				req.setAttribute("protocol", "continueWithPost");
+				req.getRequestDispatcher("post.jsp").forward(req,resp);
+			} else if(param.equalsIgnoreCase(ARTIFACT)){
+				req.setAttribute("assertion", buildAuthnRequest(true));
+				req.setAttribute("url", ConfigManager.getSinglesignonDestinationUrl());
+				req.setAttribute("parameterName", "SAMLRequest");
+				req.setAttribute("protocol", "continueWithArtifact");
 				req.getRequestDispatcher("post.jsp").forward(req,resp);
 			} else if(param.equalsIgnoreCase(RELOAD)){
+				Properties props = new Properties();
+				props.setProperty(ConfigManager.IDP_ISSUER, req.getParameter(ConfigManager.IDP_ISSUER));
+				props.setProperty(ConfigManager.ACS_RECIPIENT_URL, req.getParameter(ConfigManager.ACS_RECIPIENT_URL));
+				props.setProperty(ConfigManager.CERTIFICATE_ALIAS, req.getParameter(ConfigManager.CERTIFICATE_ALIAS));
+				props.setProperty(ConfigManager.ENTRY_PASSWORD, req.getParameter(ConfigManager.ENTRY_PASSWORD));
+				props.setProperty(ConfigManager.IDP_ISSUER_QUALIFIER, req.getParameter(ConfigManager.IDP_ISSUER_QUALIFIER));
+				props.setProperty(ConfigManager.KEYSTORE_LOCATION, req.getParameter(ConfigManager.KEYSTORE_LOCATION));
+				props.setProperty(ConfigManager.RELAY_STATE, req.getParameter(ConfigManager.RELAY_STATE));
+				props.setProperty(ConfigManager.SINGLESIGNON_DESTINATION_URL, req.getParameter(ConfigManager.SINGLESIGNON_DESTINATION_URL));
+				props.setProperty(ConfigManager.SPNAMEQUALIFIER_SPENTITYID_ISSUER, req.getParameter(ConfigManager.SPNAMEQUALIFIER_SPENTITYID_ISSUER));
+				props.setProperty(ConfigManager.ASSERTION_RESOLUTION_SERVICE_URL, req.getParameter(ConfigManager.ASSERTION_RESOLUTION_SERVICE_URL));
+				props.setProperty(ConfigManager.KEYSTORE_PASSWORD, req.getParameter(ConfigManager.KEYSTORE_PASSWORD));
+				ConfigManager.unload(props);
 				ConfigManager.load();
 				resp.sendRedirect("/idpsp");
 			}
@@ -78,9 +98,31 @@ public class AuthTriggerServlet extends HttpServlet {
 			} else if(param.equalsIgnoreCase(POST)){
 				req.setAttribute("assertion", buildAuthnRequest(true));
 				req.setAttribute("url", ConfigManager.getSinglesignonDestinationUrl());
+				req.setAttribute("parameterName", "SAMLRequest");
+				req.setAttribute("protocol", "continueWithPost");
+				req.getRequestDispatcher("post.jsp").forward(req,resp);
+			} else if(param.equalsIgnoreCase(ARTIFACT)){
+				req.setAttribute("assertion", buildAuthnRequest(true));
+				req.setAttribute("url", ConfigManager.getSinglesignonDestinationUrl());
+				req.setAttribute("parameterName", "SAMLRequest");
+				req.setAttribute("protocol", "continueWithArtifact");
 				req.getRequestDispatcher("post.jsp").forward(req,resp);
 			} else if(param.equalsIgnoreCase(RELOAD)){
+				Properties props = new Properties();
+				props.setProperty(ConfigManager.IDP_ISSUER, req.getParameter(ConfigManager.IDP_ISSUER));
+				props.setProperty(ConfigManager.ACS_RECIPIENT_URL, req.getParameter(ConfigManager.ACS_RECIPIENT_URL));
+				props.setProperty(ConfigManager.CERTIFICATE_ALIAS, req.getParameter(ConfigManager.CERTIFICATE_ALIAS));
+				props.setProperty(ConfigManager.ENTRY_PASSWORD, req.getParameter(ConfigManager.ENTRY_PASSWORD));
+				props.setProperty(ConfigManager.IDP_ISSUER_QUALIFIER, req.getParameter(ConfigManager.IDP_ISSUER_QUALIFIER));
+				props.setProperty(ConfigManager.KEYSTORE_LOCATION, req.getParameter(ConfigManager.KEYSTORE_LOCATION));
+				props.setProperty(ConfigManager.RELAY_STATE, req.getParameter(ConfigManager.RELAY_STATE));
+				props.setProperty(ConfigManager.SINGLESIGNON_DESTINATION_URL, req.getParameter(ConfigManager.SINGLESIGNON_DESTINATION_URL));
+				props.setProperty(ConfigManager.SPNAMEQUALIFIER_SPENTITYID_ISSUER, req.getParameter(ConfigManager.SPNAMEQUALIFIER_SPENTITYID_ISSUER));
+				props.setProperty(ConfigManager.ASSERTION_RESOLUTION_SERVICE_URL, req.getParameter(ConfigManager.ASSERTION_RESOLUTION_SERVICE_URL));
+				props.setProperty(ConfigManager.KEYSTORE_PASSWORD, req.getParameter(ConfigManager.KEYSTORE_PASSWORD));
+				ConfigManager.unload(props);
 				ConfigManager.load();
+				resp.sendRedirect("/idpsp");
 			}
 		}
 		
@@ -194,4 +236,6 @@ public class AuthTriggerServlet extends HttpServlet {
 	      return url;
 		
 	}
-}
+	
+	
+	}

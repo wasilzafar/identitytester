@@ -11,11 +11,13 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.wasil.saml.idp.IDPConstants;
+
 public class ConfigManager {
 	
 	private final static Logger logger = LoggerFactory.getLogger(ConfigManager.class);
 	
-	public static final String APPLICATION_PROPERTIES = "/com/wasil/resources/app.properties";
+	public static final String APPLICATION_PROPERTIES = "classpath:///com/wasil/resources/app.properties";
 	
 	public static final String KEYSTORE_LOCATION = "idp.keystore.location";
 	public static final String KEYSTORE_PASSWORD = "idp.keystore.password";
@@ -27,8 +29,13 @@ public class ConfigManager {
 	public static final String SPNAMEQUALIFIER_SPENTITYID_ISSUER = "spnamequalifier.spentityid.issuer";
 	public static final String IDP_ISSUER = "idp.issuer";
 	public static final String ACS_RECIPIENT_URL = "acs.recipient.url";
+	public static final String ASSERTION_RESOLUTION_SERVICE_URL = "ars.url";
 	public static final String IDP_ISSUER_QUALIFIER = "idp.issuer.qualifier";
 
+	public static final String propertiesFileString = System.getProperty("user.home") + "/"
+			+ APPLICATION_PROPERTIES.substring(APPLICATION_PROPERTIES.lastIndexOf("/"));
+	static File propertiesFile = new File(propertiesFileString);
+	
 	private static Properties  prop = new Properties();
 	
 	public static Properties getProp() {
@@ -38,11 +45,7 @@ public class ConfigManager {
 	}
 
 	public static void load(){
-        boolean loaded = false;
-		String userHome = System.getProperty("user.home");
-		String propertiesFileString = userHome + "/"
-				+ APPLICATION_PROPERTIES.substring(APPLICATION_PROPERTIES.lastIndexOf("/"));
-		File propertiesFile = new File(propertiesFileString);
+        boolean loaded = false;		
 		if (propertiesFile.exists()) {
 			InputStream in;
 			try {
@@ -55,7 +58,7 @@ public class ConfigManager {
 			loaded = true;
 		} 
 		if(!loaded) {
-			InputStream in = ConfigManager.class.getResourceAsStream(APPLICATION_PROPERTIES);
+			InputStream in = ConfigManager.class.getResourceAsStream(APPLICATION_PROPERTIES.substring(IDPConstants.CLASSPATH.length()));
 			try {
 				prop.load(in);
 				in.close();
@@ -85,6 +88,23 @@ public class ConfigManager {
 		    String value = (String)prop.get(key);
 		    logger.info(key + ": " + value);
 		}
+	}
+	
+	public static void unload(Properties props){
+		FileOutputStream os = null;
+	try {
+		os = new FileOutputStream(propertiesFile);
+		props.store(new FileOutputStream(propertiesFile), "Current configurations");
+	} catch (Exception e) {
+		// Exception while storing properties on file system.
+	}finally {
+		try {
+			os.close();
+		} catch (IOException e) {
+		}
+	}
+	
+		
 	}
 
 	public static String getKeystoreLocation() {
@@ -117,6 +137,10 @@ public class ConfigManager {
 
 	public static String getAcsRecipientUrl() {
 		return prop.getProperty(ACS_RECIPIENT_URL);
+	}
+
+	public static String getAssertionResolutionServiceUrl() {
+		return prop.getProperty(ASSERTION_RESOLUTION_SERVICE_URL);
 	}
 
 	public static String getIdpIssuerQualifier() {

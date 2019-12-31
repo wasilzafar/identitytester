@@ -1,5 +1,7 @@
 package com.wasil.saml.common;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.KeyStore;
@@ -28,6 +30,8 @@ import org.opensaml.xml.util.XMLHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
+
+import com.wasil.saml.idp.IDPConstants;
  
 public class SignAssertion
 {
@@ -51,9 +55,14 @@ public class SignAssertion
       {
          logger.error("Error while Intializing Keystore", e);
       }
- 
-      fis = getClass().getResourceAsStream(ConfigManager.getKeystoreLocation());
- 
+      if(ConfigManager.getKeystoreLocation().startsWith(IDPConstants.CLASSPATH))
+    	  fis = getClass().getResourceAsStream(ConfigManager.getKeystoreLocation().substring(IDPConstants.CLASSPATH.length()));
+      else if(ConfigManager.getKeystoreLocation().startsWith(IDPConstants.FILESYSTEM))
+		try {
+			fis = new FileInputStream(ConfigManager.getKeystoreLocation().substring(IDPConstants.FILESYSTEM.length()));
+		} catch (FileNotFoundException e1) {
+			logger.error("Keystore file missing! "+e1);
+		}
       // Load KeyStore
       try
       {
@@ -160,15 +169,21 @@ public class SignAssertion
       assertion.setSignature(assertionSignature);
       ((SAMLObjectContentReference)assertionSignature.getContentReferences().get(0)).setDigestAlgorithm(EncryptionConstants.ALGO_ID_DIGEST_SHA256);
       ((SAMLObjectContentReference)responseSignature.getContentReferences().get(0)).setDigestAlgorithm(EncryptionConstants.ALGO_ID_DIGEST_SHA256);
+      
+      
+      Element plain = null;
+      
       try
       {
-         Configuration.getMarshallerFactory().getMarshaller(assertion).marshall(assertion);
+         ResponseMarshaller marshaller = new ResponseMarshaller();
+         plain = marshaller.marshall(resp);
       }
       catch (MarshallingException e)
       {
          e.printStackTrace();
       }
- 
+      
+      
       try
       {
          Signer.signObject(assertionSignature);
@@ -178,12 +193,13 @@ public class SignAssertion
       {
          e.printStackTrace();
       }
- 
-      ResponseMarshaller marshaller = new ResponseMarshaller();
-      Element plain = marshaller.marshall(resp);
+      
+      
+      
+      
       String samlResponse = XMLHelper.nodeToString(plain);
       logger.info("Generated signed response :\n" + samlResponse);
-	return samlResponse;
+	  return samlResponse;
  
    }
 }

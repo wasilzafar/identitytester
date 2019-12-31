@@ -145,7 +145,14 @@ ul li a{ box-shadow: 0px 1px 1px #999; }
 </div>  	<br>
 			<form action='<%=ConfigManager.getSinglesignonDestinationUrl()%>'>
 			<input type='hidden' name='PreservedAuthRequest' value='<%=request.getAttribute("originalRequest")%>'>
-			<input type='submit' title='Click to continue ....' name='continue' value='Continue ...'/>
+			<%
+			String protocol = "";
+			if(request.getParameter("protocol") == null || request.getParameter("protocol").equalsIgnoreCase(""))
+			 protocol = "continueWithRedirect";
+			else
+				protocol = request.getParameter("protocol");
+			%>
+			<input type='submit' title='Click to continue ....' name='continue' value='<%=protocol%>'/>
 			</form>
 
 			

@@ -1,3 +1,4 @@
+<%@page import="com.wasil.saml.common.ConfigManager"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
@@ -111,16 +112,31 @@ ul li a{ box-shadow: 0px 1px 1px #999; }
 			<p>Click the buttons below to trigger SAML Authentication</p>	
 			<div id="nav">
 			<ul>
-				<li><a href="/idpsp/trigger?p=redirect">HTTP-Redirect</a></li>
-				<li><a href="/idpsp/trigger?p=post">HTTP-POST</a></li>
+				<li><a href="/idpsp/trigger?p=redirect">HTTP-Redirect | HTTP-POST</a></li>
+				<li><a href="/idpsp/trigger?p=post">HTTP-POST | HTTP-POST</a></li>
+				<li><a href="/idpsp/trigger?p=artifact">HTTP-POST | HTTP Artifact</a></li>
 			</ul>
 			</div>
 			<p>
-				When application starts, properties file is written to Java user home directory. Make changes in the file and click below button to reload </p>
+				When application starts, properties file is written to Java user home directory. Make changes and click below reload button for new values </p>
 			<div id="nav">
-			<ul>
+			<br><label>Current Properties </label><form method="post" action="/idpsp/trigger?p=reload">
+			<br><label>Service Provider Entity Id</label>&nbsp;&nbsp;<input type="text" name="spnamequalifier.spentityid.issuer" value="<%=ConfigManager.getSpnamequalifierSpentityidIssuer()%>">
+			<br><label>SSO Destination URL</label>&nbsp;&nbsp;<input type="text" name="singlesignon-destination.url" value="<%=ConfigManager.getSinglesignonDestinationUrl()%>">
+			<br><label>Issuer qualifier</label>&nbsp;&nbsp;<input type="text" name="idp.issuer.qualifier" value="<%=ConfigManager.getIdpIssuerQualifier()%>">
+			<br><label>Keystore Location(file:// & classpath:// protocols)</label>&nbsp;&nbsp;<input type="text" name="idp.keystore.location" value="<%=ConfigManager.getKeystoreLocation()%>">
+			<br><label>Certificate Alias/Name</label>&nbsp;&nbsp;<input type="text" name="certificate.alias" value="<%=ConfigManager.getCertificateAlias()%>">
+			<br><label>Keystore entry password</label>&nbsp;&nbsp;<input type="password" name="idp.keystore.entry.password" value="<%=ConfigManager.getEntryPassword()%>">
+			<br><label>Keystore password</label>&nbsp;&nbsp;<input type="password" name="idp.keystore.password" value="<%=ConfigManager.getKeystorePassword()%>">
+			<br><label>Artifact resolution URL</label>&nbsp;&nbsp;<input type="text" name="ars.url" value="<%=ConfigManager.getAssertionResolutionServiceUrl()%>">
+			<br><label>Relay state URL</label>&nbsp;&nbsp;<input type="text" name="relay.state" value="<%=ConfigManager.getRelayState()%>">
+			<br><label>IDP issuer</label>&nbsp;&nbsp;<input type="text" name="idp.issuer" value="<%=ConfigManager.getIdpIssuer()%>">
+			<br><label>Recipient/Landing URL</label>&nbsp;&nbsp;<input type="text" name="acs.recipient.url" value="<%=ConfigManager.getAcsRecipientUrl()%>">
+			<br><br><input type="submit" value="Reload">			
+			</form>
+			<!-- <ul>
 				<li><a href="/idpsp/trigger?p=reload">Reload</a></li>
-			</ul>
+			</ul> -->
 			</div>	
 		</div>
 		<div id="footer">

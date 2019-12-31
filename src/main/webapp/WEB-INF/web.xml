@@ -25,6 +25,12 @@
 		<description></description>
 		<servlet-class>com.wasil.saml.sp.AssertionConsumerServlet</servlet-class>
 	</servlet>
+	<servlet>
+		<servlet-name>ArtifactResolutionServlet</servlet-name>
+		<display-name>ArtifactResolutionServlet</display-name>
+		<description></description>
+		<servlet-class>com.wasil.saml.idp.ArtifactResolutionServlet</servlet-class>
+	</servlet>
 	<servlet-mapping>
 		<servlet-name>IDPSSOServlet</servlet-name>
 		<url-pattern>/SSO</url-pattern>
@@ -36,6 +42,10 @@
 	<servlet-mapping>
 		<servlet-name>AssertionConsumerServlet</servlet-name>
 		<url-pattern>/acs</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>ArtifactResolutionServlet</servlet-name>
+		<url-pattern>/ars</url-pattern>
 	</servlet-mapping>
 	<welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>
