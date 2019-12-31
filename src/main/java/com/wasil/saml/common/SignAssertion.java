@@ -31,7 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
-import com.wasil.saml.idp.IDPConstants;
+import com.wasil.saml.idp.Constants;
  
 public class SignAssertion
 {
@@ -44,7 +44,7 @@ public class SignAssertion
    {
       KeyStore ks = null;
       InputStream fis = null;
-      char[] password = ConfigManager.getKeystorePassword().toCharArray();
+      char[] password = ConfigManager.getIDPKeystorePassword().toCharArray();
  
       // Get Default Instance of KeyStore
       try
@@ -55,11 +55,11 @@ public class SignAssertion
       {
          logger.error("Error while Intializing Keystore", e);
       }
-      if(ConfigManager.getKeystoreLocation().startsWith(IDPConstants.CLASSPATH))
-    	  fis = getClass().getResourceAsStream(ConfigManager.getKeystoreLocation().substring(IDPConstants.CLASSPATH.length()));
-      else if(ConfigManager.getKeystoreLocation().startsWith(IDPConstants.FILESYSTEM))
+      if(ConfigManager.getIDPKeystoreLocation().startsWith(Constants.CLASSPATH))
+    	  fis = getClass().getResourceAsStream(ConfigManager.getIDPKeystoreLocation().substring(Constants.CLASSPATH.length()));
+      else if(ConfigManager.getIDPKeystoreLocation().startsWith(Constants.FILESYSTEM))
 		try {
-			fis = new FileInputStream(ConfigManager.getKeystoreLocation().substring(IDPConstants.FILESYSTEM.length()));
+			fis = new FileInputStream(ConfigManager.getIDPKeystoreLocation().substring(Constants.FILESYSTEM.length()));
 		} catch (FileNotFoundException e1) {
 			logger.error("Keystore file missing! "+e1);
 		}
@@ -95,20 +95,20 @@ public class SignAssertion
       KeyStore.PrivateKeyEntry pkEntry = null;
       try
       {
-         pkEntry = (KeyStore.PrivateKeyEntry) ks.getEntry(ConfigManager.getCertificateAlias(), new KeyStore.PasswordProtection(
-        		 ConfigManager.getEntryPassword().toCharArray()));
+         pkEntry = (KeyStore.PrivateKeyEntry) ks.getEntry(ConfigManager.getIDPCertificateAlias(), new KeyStore.PasswordProtection(
+        		 ConfigManager.getIDPEntryPassword().toCharArray()));
       }
       catch (NoSuchAlgorithmException e)
       {
-         logger.error("Failed to Get Private Entry From the keystore:: " + ConfigManager.getKeystoreLocation(), e);
+         logger.error("Failed to Get Private Entry From the keystore:: " + ConfigManager.getIDPKeystoreLocation(), e);
       }
       catch (UnrecoverableEntryException e)
       {
-         logger.error("Failed to Get Private Entry From the keystore:: " + ConfigManager.getKeystoreLocation(), e);
+         logger.error("Failed to Get Private Entry From the keystore:: " + ConfigManager.getIDPKeystoreLocation(), e);
       }
       catch (KeyStoreException e)
       {
-         logger.error("Failed to Get Private Entry From the keystore:: " + ConfigManager.getKeystoreLocation(), e);
+         logger.error("Failed to Get Private Entry From the keystore:: " + ConfigManager.getIDPKeystoreLocation(), e);
       }
       PrivateKey pk = pkEntry.getPrivateKey();
  

@@ -11,7 +11,7 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.wasil.saml.idp.IDPConstants;
+import com.wasil.saml.idp.Constants;
 
 public class ConfigManager {
 	
@@ -19,10 +19,16 @@ public class ConfigManager {
 	
 	public static final String APPLICATION_PROPERTIES = "classpath:///com/wasil/resources/app.properties";
 	
-	public static final String KEYSTORE_LOCATION = "idp.keystore.location";
-	public static final String KEYSTORE_PASSWORD = "idp.keystore.password";
-	public static final String ENTRY_PASSWORD = "idp.keystore.entry.password";
-	public static final String CERTIFICATE_ALIAS = "certificate.alias";
+	public static final String SP_KEYSTORE_LOCATION = "sp.keystore.location";
+	public static final String SP_KEYSTORE_PASSWORD = "sp.keystore.password";
+	public static final String SP_ENTRY_PASSWORD = "sp.keystore.entry.password";
+	public static final String SP_CERTIFICATE_ALIAS = "sp.certificate.alias";
+	
+	
+	public static final String IDP_KEYSTORE_LOCATION = "idp.keystore.location";
+	public static final String IDP_KEYSTORE_PASSWORD = "idp.keystore.password";
+	public static final String IDP_ENTRY_PASSWORD = "idp.keystore.entry.password";
+	public static final String IDP_CERTIFICATE_ALIAS = "idp.certificate.alias"; 
 	
 	public static final String SINGLESIGNON_DESTINATION_URL = "singlesignon-destination.url";
 	public static final String RELAY_STATE = "relay.state";
@@ -58,7 +64,7 @@ public class ConfigManager {
 			loaded = true;
 		} 
 		if(!loaded) {
-			InputStream in = ConfigManager.class.getResourceAsStream(APPLICATION_PROPERTIES.substring(IDPConstants.CLASSPATH.length()));
+			InputStream in = ConfigManager.class.getResourceAsStream(APPLICATION_PROPERTIES.substring(Constants.CLASSPATH.length()));
 			try {
 				prop.load(in);
 				in.close();
@@ -106,17 +112,34 @@ public class ConfigManager {
 	
 		
 	}
-
-	public static String getKeystoreLocation() {
-		return prop.getProperty(KEYSTORE_LOCATION);
+	
+	public static String get(String property) {
+		return prop.getProperty(property);
 	}
 
-	public static String getKeystorePassword() {
-		return prop.getProperty(KEYSTORE_PASSWORD);
+
+	public static String getIDPKeystoreLocation() {
+		return prop.getProperty(IDP_KEYSTORE_LOCATION);
 	}
 
-	public static String getEntryPassword() {
-		return prop.getProperty(ENTRY_PASSWORD);
+	public static String getIDPKeystorePassword() {
+		return prop.getProperty(IDP_KEYSTORE_PASSWORD);
+	}
+
+	public static String getIDPEntryPassword() {
+		return prop.getProperty(IDP_ENTRY_PASSWORD);
+	}
+	
+	public static String getSPKeystoreLocation() {
+		return prop.getProperty(SP_KEYSTORE_LOCATION);
+	}
+
+	public static String getSPKeystorePassword() {
+		return prop.getProperty(SP_KEYSTORE_PASSWORD);
+	}
+
+	public static String getSPEntryPassword() {
+		return prop.getProperty(SP_ENTRY_PASSWORD);
 	}
 
 	public static String getSinglesignonDestinationUrl() {
@@ -147,7 +170,11 @@ public class ConfigManager {
 		return prop.getProperty(IDP_ISSUER_QUALIFIER);
 	}
 
-	public static String getCertificateAlias() {
-		return prop.getProperty(CERTIFICATE_ALIAS);
+	public static String getIDPCertificateAlias() {
+		return prop.getProperty(IDP_CERTIFICATE_ALIAS);
+	}
+	
+	public static String getSPCertificateAlias() {
+		return prop.getProperty(SP_CERTIFICATE_ALIAS);
 	}
 }

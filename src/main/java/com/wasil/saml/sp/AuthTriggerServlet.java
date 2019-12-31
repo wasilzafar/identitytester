@@ -22,6 +22,7 @@ import org.opensaml.saml2.core.AuthnContextClassRef;
 import org.opensaml.saml2.core.AuthnContextComparisonTypeEnumeration;
 import org.opensaml.saml2.core.AuthnRequest;
 import org.opensaml.saml2.core.Issuer;
+import org.opensaml.saml2.core.NameID;
 import org.opensaml.saml2.core.NameIDPolicy;
 import org.opensaml.saml2.core.RequestedAuthnContext;
 import org.opensaml.saml2.core.impl.AuthnContextClassRefBuilder;
@@ -31,11 +32,17 @@ import org.opensaml.saml2.core.impl.NameIDPolicyBuilder;
 import org.opensaml.saml2.core.impl.RequestedAuthnContextBuilder;
 import org.opensaml.xml.io.Marshaller;
 import org.opensaml.xml.io.MarshallingException;
+import org.opensaml.xml.signature.Signature;
+import org.opensaml.xml.signature.SignatureConstants;
+import org.opensaml.xml.signature.impl.SignatureBuilder;
 import org.opensaml.xml.util.Base64;
 import org.opensaml.xml.util.XMLHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.wasil.saml.common.CertificateManager;
 import com.wasil.saml.common.ConfigManager;
+import com.wasil.saml.idp.Constants;
 
 public class AuthTriggerServlet extends HttpServlet {
 	
@@ -45,6 +52,8 @@ public class AuthTriggerServlet extends HttpServlet {
 	public static final String POST = "post";
 	public static final String ARTIFACT = "artifact";
 	public static final String RELOAD = "reload";
+	
+	private CertificateManager certManager = new CertificateManager();
 	
 	@Override
 	public void init(ServletConfig config) throws ServletException {
@@ -72,15 +81,19 @@ public class AuthTriggerServlet extends HttpServlet {
 				Properties props = new Properties();
 				props.setProperty(ConfigManager.IDP_ISSUER, req.getParameter(ConfigManager.IDP_ISSUER));
 				props.setProperty(ConfigManager.ACS_RECIPIENT_URL, req.getParameter(ConfigManager.ACS_RECIPIENT_URL));
-				props.setProperty(ConfigManager.CERTIFICATE_ALIAS, req.getParameter(ConfigManager.CERTIFICATE_ALIAS));
-				props.setProperty(ConfigManager.ENTRY_PASSWORD, req.getParameter(ConfigManager.ENTRY_PASSWORD));
+				props.setProperty(ConfigManager.IDP_CERTIFICATE_ALIAS, req.getParameter(ConfigManager.IDP_CERTIFICATE_ALIAS));
+				props.setProperty(ConfigManager.SP_CERTIFICATE_ALIAS, req.getParameter(ConfigManager.SP_CERTIFICATE_ALIAS));
+				props.setProperty(ConfigManager.IDP_ENTRY_PASSWORD, req.getParameter(ConfigManager.IDP_ENTRY_PASSWORD));
+				props.setProperty(ConfigManager.SP_ENTRY_PASSWORD, req.getParameter(ConfigManager.SP_ENTRY_PASSWORD));
 				props.setProperty(ConfigManager.IDP_ISSUER_QUALIFIER, req.getParameter(ConfigManager.IDP_ISSUER_QUALIFIER));
-				props.setProperty(ConfigManager.KEYSTORE_LOCATION, req.getParameter(ConfigManager.KEYSTORE_LOCATION));
+				props.setProperty(ConfigManager.IDP_KEYSTORE_LOCATION, req.getParameter(ConfigManager.IDP_KEYSTORE_LOCATION));
+				props.setProperty(ConfigManager.SP_KEYSTORE_LOCATION, req.getParameter(ConfigManager.SP_KEYSTORE_LOCATION));
 				props.setProperty(ConfigManager.RELAY_STATE, req.getParameter(ConfigManager.RELAY_STATE));
 				props.setProperty(ConfigManager.SINGLESIGNON_DESTINATION_URL, req.getParameter(ConfigManager.SINGLESIGNON_DESTINATION_URL));
 				props.setProperty(ConfigManager.SPNAMEQUALIFIER_SPENTITYID_ISSUER, req.getParameter(ConfigManager.SPNAMEQUALIFIER_SPENTITYID_ISSUER));
 				props.setProperty(ConfigManager.ASSERTION_RESOLUTION_SERVICE_URL, req.getParameter(ConfigManager.ASSERTION_RESOLUTION_SERVICE_URL));
-				props.setProperty(ConfigManager.KEYSTORE_PASSWORD, req.getParameter(ConfigManager.KEYSTORE_PASSWORD));
+				props.setProperty(ConfigManager.IDP_KEYSTORE_PASSWORD, req.getParameter(ConfigManager.IDP_KEYSTORE_PASSWORD));
+				props.setProperty(ConfigManager.SP_KEYSTORE_PASSWORD, req.getParameter(ConfigManager.SP_KEYSTORE_PASSWORD));
 				ConfigManager.unload(props);
 				ConfigManager.load();
 				resp.sendRedirect("/idpsp");
@@ -111,15 +124,19 @@ public class AuthTriggerServlet extends HttpServlet {
 				Properties props = new Properties();
 				props.setProperty(ConfigManager.IDP_ISSUER, req.getParameter(ConfigManager.IDP_ISSUER));
 				props.setProperty(ConfigManager.ACS_RECIPIENT_URL, req.getParameter(ConfigManager.ACS_RECIPIENT_URL));
-				props.setProperty(ConfigManager.CERTIFICATE_ALIAS, req.getParameter(ConfigManager.CERTIFICATE_ALIAS));
-				props.setProperty(ConfigManager.ENTRY_PASSWORD, req.getParameter(ConfigManager.ENTRY_PASSWORD));
+				props.setProperty(ConfigManager.IDP_CERTIFICATE_ALIAS, req.getParameter(ConfigManager.IDP_CERTIFICATE_ALIAS));
+				props.setProperty(ConfigManager.SP_CERTIFICATE_ALIAS, req.getParameter(ConfigManager.SP_CERTIFICATE_ALIAS));
+				props.setProperty(ConfigManager.IDP_ENTRY_PASSWORD, req.getParameter(ConfigManager.IDP_ENTRY_PASSWORD));
+				props.setProperty(ConfigManager.SP_ENTRY_PASSWORD, req.getParameter(ConfigManager.SP_ENTRY_PASSWORD));
 				props.setProperty(ConfigManager.IDP_ISSUER_QUALIFIER, req.getParameter(ConfigManager.IDP_ISSUER_QUALIFIER));
-				props.setProperty(ConfigManager.KEYSTORE_LOCATION, req.getParameter(ConfigManager.KEYSTORE_LOCATION));
+				props.setProperty(ConfigManager.IDP_KEYSTORE_LOCATION, req.getParameter(ConfigManager.IDP_KEYSTORE_LOCATION));
+				props.setProperty(ConfigManager.SP_KEYSTORE_LOCATION, req.getParameter(ConfigManager.SP_KEYSTORE_LOCATION));
 				props.setProperty(ConfigManager.RELAY_STATE, req.getParameter(ConfigManager.RELAY_STATE));
 				props.setProperty(ConfigManager.SINGLESIGNON_DESTINATION_URL, req.getParameter(ConfigManager.SINGLESIGNON_DESTINATION_URL));
 				props.setProperty(ConfigManager.SPNAMEQUALIFIER_SPENTITYID_ISSUER, req.getParameter(ConfigManager.SPNAMEQUALIFIER_SPENTITYID_ISSUER));
 				props.setProperty(ConfigManager.ASSERTION_RESOLUTION_SERVICE_URL, req.getParameter(ConfigManager.ASSERTION_RESOLUTION_SERVICE_URL));
-				props.setProperty(ConfigManager.KEYSTORE_PASSWORD, req.getParameter(ConfigManager.KEYSTORE_PASSWORD));
+				props.setProperty(ConfigManager.IDP_KEYSTORE_PASSWORD, req.getParameter(ConfigManager.IDP_KEYSTORE_PASSWORD));
+				props.setProperty(ConfigManager.SP_KEYSTORE_PASSWORD, req.getParameter(ConfigManager.SP_KEYSTORE_PASSWORD));
 				ConfigManager.unload(props);
 				ConfigManager.load();
 				resp.sendRedirect("/idpsp");
@@ -152,7 +169,7 @@ public class AuthTriggerServlet extends HttpServlet {
 	      NameIDPolicyBuilder nameIdPolicyBuilder = new NameIDPolicyBuilder();
 	      NameIDPolicy nameIdPolicy = nameIdPolicyBuilder.buildObject();
 	      //nameIdPolicy.setSchemaLocation("urn:oasis:names:tc:SAML:2.0:protocol");
-	      nameIdPolicy.setFormat("urn:oasis:names:tc:SAML:2.0:nameid-format:persistent");
+	      nameIdPolicy.setFormat(NameID.TRANSIENT);
 	      nameIdPolicy.setSPNameQualifier(ConfigManager.getSpnamequalifierSpentityidIssuer());
 	      nameIdPolicy.setAllowCreate(true);
 	      
@@ -183,13 +200,14 @@ public class AuthTriggerServlet extends HttpServlet {
 	      authRequest.setIssueInstant(issueInstant);
 	      authRequest.setDestination(ConfigManager.getSinglesignonDestinationUrl());
 	      //authRequest.setProtocolBinding("urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST");
-	      authRequest.setProtocolBinding("urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect");
+	      authRequest.setProtocolBinding("urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST");
 	      authRequest.setAssertionConsumerServiceURL(ConfigManager.getAcsRecipientUrl());
 	      authRequest.setIssuer(issuer); 
 	      authRequest.setNameIDPolicy(nameIdPolicy); 
 	      authRequest.setRequestedAuthnContext(requestedAuthnContext); 
 	      authRequest.setID(randId); 
 	      authRequest.setVersion(SAMLVersion.VERSION_20);
+	      authRequest.setSignature(createSignature());
 	      String stringRep = authRequest.toString();
 	      System.out.println("AuthTriggerServlet: AuthnRequestImpl: " + stringRep);
 	      
@@ -215,7 +233,9 @@ public class AuthTriggerServlet extends HttpServlet {
 	      e.printStackTrace();
 	    } catch (IOException e) {
 	      e.printStackTrace();
-	    } finally{
+	    } catch (Throwable e) {
+			e.printStackTrace();
+		} finally{
 	    }
 	    if(base64Only)
 	    	return Base64.encodeBytes(messageXML.getBytes(), Base64.DONT_BREAK_LINES);
@@ -235,6 +255,20 @@ public class AuthTriggerServlet extends HttpServlet {
 	      System.out.println("AuthTriggerServlet: URL - "+url);	      
 	      return url;
 		
+	}
+	
+	private Signature createSignature() throws Throwable {
+		if (ConfigManager.getSPKeystoreLocation() != null) {
+			SignatureBuilder builder = new SignatureBuilder();
+			Signature signature = builder.buildObject();
+			signature.setSigningCredential(certManager.getSigningCredential(ConfigManager.getSPKeystorePassword(), ConfigManager.getSPEntryPassword(), Constants.ENTITY_SP));
+			signature.setSignatureAlgorithm(SignatureConstants.ALGO_ID_SIGNATURE_RSA_SHA1);
+			signature.setCanonicalizationAlgorithm(SignatureConstants.ALGO_ID_C14N_EXCL_OMIT_COMMENTS);
+			
+			return signature;
+		}
+		
+		return null;
 	}
 	
 	

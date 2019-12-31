@@ -124,10 +124,14 @@ ul li a{ box-shadow: 0px 1px 1px #999; }
 			<br><label>Service Provider Entity Id</label>&nbsp;&nbsp;<input type="text" name="spnamequalifier.spentityid.issuer" value="<%=ConfigManager.getSpnamequalifierSpentityidIssuer()%>">
 			<br><label>SSO Destination URL</label>&nbsp;&nbsp;<input type="text" name="singlesignon-destination.url" value="<%=ConfigManager.getSinglesignonDestinationUrl()%>">
 			<br><label>Issuer qualifier</label>&nbsp;&nbsp;<input type="text" name="idp.issuer.qualifier" value="<%=ConfigManager.getIdpIssuerQualifier()%>">
-			<br><label>Keystore Location(file:// & classpath:// protocols)</label>&nbsp;&nbsp;<input type="text" name="idp.keystore.location" value="<%=ConfigManager.getKeystoreLocation()%>">
-			<br><label>Certificate Alias/Name</label>&nbsp;&nbsp;<input type="text" name="certificate.alias" value="<%=ConfigManager.getCertificateAlias()%>">
-			<br><label>Keystore entry password</label>&nbsp;&nbsp;<input type="password" name="idp.keystore.entry.password" value="<%=ConfigManager.getEntryPassword()%>">
-			<br><label>Keystore password</label>&nbsp;&nbsp;<input type="password" name="idp.keystore.password" value="<%=ConfigManager.getKeystorePassword()%>">
+			<br><label>IDP Keystore Location(file:// & classpath:// protocols)</label>&nbsp;&nbsp;<input type="text" name="idp.keystore.location" value="<%=ConfigManager.getIDPKeystoreLocation()%>">
+			<br><label>IDP Certificate Alias/Name</label>&nbsp;&nbsp;<input type="text" name="idp.certificate.alias" value="<%=ConfigManager.getIDPCertificateAlias()%>">
+			<br><label>IDP Keystore entry password</label>&nbsp;&nbsp;<input type="password" name="idp.keystore.entry.password" value="<%=ConfigManager.getIDPEntryPassword()%>">
+			<br><label>IDP Keystore password</label>&nbsp;&nbsp;<input type="password" name="idp.keystore.password" value="<%=ConfigManager.getIDPKeystorePassword()%>">
+			<br><label>SP Keystore Location(file:// & classpath:// protocols)</label>&nbsp;&nbsp;<input type="text" name="sp.keystore.location" value="<%=ConfigManager.getSPKeystoreLocation()%>">
+			<br><label>SP Certificate Alias/Name</label>&nbsp;&nbsp;<input type="text" name="sp.certificate.alias" value="<%=ConfigManager.getSPCertificateAlias()%>">
+			<br><label>SP Keystore entry password</label>&nbsp;&nbsp;<input type="password" name="sp.keystore.entry.password" value="<%=ConfigManager.getSPEntryPassword()%>">
+			<br><label>SP Keystore password</label>&nbsp;&nbsp;<input type="password" name="sp.keystore.password" value="<%=ConfigManager.getSPKeystorePassword()%>">
 			<br><label>Artifact resolution URL</label>&nbsp;&nbsp;<input type="text" name="ars.url" value="<%=ConfigManager.getAssertionResolutionServiceUrl()%>">
 			<br><label>Relay state URL</label>&nbsp;&nbsp;<input type="text" name="relay.state" value="<%=ConfigManager.getRelayState()%>">
 			<br><label>IDP issuer</label>&nbsp;&nbsp;<input type="text" name="idp.issuer" value="<%=ConfigManager.getIdpIssuer()%>">

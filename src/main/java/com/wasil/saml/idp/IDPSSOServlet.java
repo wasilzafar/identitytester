@@ -179,8 +179,8 @@ public class IDPSSOServlet extends HttpServlet {
 			input.setStrNameQualifier(ConfigManager.getIdpIssuerQualifier());
 
 			Map customAttributes = new HashMap();
-			customAttributes.put("firstName", "Wasil");
-			customAttributes.put("lastName", "Zafar");
+			customAttributes.put("firstName", "Sahil");
+			customAttributes.put("lastName", "Shamsi");
 
 			input.setAttributes(customAttributes);
 			return new SignAssertion().createSignedResponse(input);
