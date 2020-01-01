@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.joda.time.DateTime;
+import org.opensaml.Configuration;
 import org.opensaml.common.SAMLVersion;
 import org.opensaml.saml2.core.AuthnContext;
 import org.opensaml.saml2.core.AuthnContextClassRef;
@@ -32,8 +33,13 @@ import org.opensaml.saml2.core.impl.NameIDPolicyBuilder;
 import org.opensaml.saml2.core.impl.RequestedAuthnContextBuilder;
 import org.opensaml.xml.io.Marshaller;
 import org.opensaml.xml.io.MarshallingException;
+import org.opensaml.xml.security.SecurityConfiguration;
+import org.opensaml.xml.security.SecurityHelper;
+import org.opensaml.xml.security.credential.Credential;
 import org.opensaml.xml.signature.Signature;
 import org.opensaml.xml.signature.SignatureConstants;
+import org.opensaml.xml.signature.SignatureException;
+import org.opensaml.xml.signature.Signer;
 import org.opensaml.xml.signature.impl.SignatureBuilder;
 import org.opensaml.xml.util.Base64;
 import org.opensaml.xml.util.XMLHelper;
@@ -191,7 +197,7 @@ public class AuthTriggerServlet extends HttpServlet {
 	      //.setParent((XMLObject) requestedAuthnContext);
 	      
 	    
-	      
+	      Signature sign = createSignature();
 	      DateTime issueInstant = new DateTime();
 	      AuthnRequestBuilder authRequestBuilder = new AuthnRequestBuilder();
 	      AuthnRequest authRequest = authRequestBuilder.buildObject("urn:oasis:names:tc:SAML:2.0:protocol", "AuthnRequest", "samlp");
@@ -207,13 +213,23 @@ public class AuthTriggerServlet extends HttpServlet {
 	      authRequest.setRequestedAuthnContext(requestedAuthnContext); 
 	      authRequest.setID(randId); 
 	      authRequest.setVersion(SAMLVersion.VERSION_20);
-	      authRequest.setSignature(createSignature());
+	      authRequest.setSignature(sign);
 	      String stringRep = authRequest.toString();
 	      System.out.println("AuthTriggerServlet: AuthnRequestImpl: " + stringRep);
 	      
 	      
 	      Marshaller marshaller = org.opensaml.Configuration.getMarshallerFactory().getMarshaller(authRequest);
 	      org.w3c.dom.Element authDOM = marshaller.marshall(authRequest);
+	      
+	      try
+	      {
+	         Signer.signObject(sign);
+	      }
+	      catch (SignatureException e)
+	      {
+	         e.printStackTrace();
+	      }
+	      
 	      StringWriter rspWrt = new StringWriter();
 	      XMLHelper.writeNode(authDOM, rspWrt);
 	      messageXML = rspWrt.toString();
@@ -258,14 +274,27 @@ public class AuthTriggerServlet extends HttpServlet {
 	}
 	
 	private Signature createSignature() throws Throwable {
-		if (ConfigManager.getSPKeystoreLocation() != null) {
-			SignatureBuilder builder = new SignatureBuilder();
-			Signature signature = builder.buildObject();
-			signature.setSigningCredential(certManager.getSigningCredential(ConfigManager.getSPKeystorePassword(), ConfigManager.getSPEntryPassword(), Constants.ENTITY_SP));
-			signature.setSignatureAlgorithm(SignatureConstants.ALGO_ID_SIGNATURE_RSA_SHA1);
-			signature.setCanonicalizationAlgorithm(SignatureConstants.ALGO_ID_C14N_EXCL_OMIT_COMMENTS);
-			
-			return signature;
+		if (ConfigManager.getSPKeystoreLocation() != null) {			
+			Signature authRequestSignature = null;
+			Credential cred = certManager.getSigningCredential(ConfigManager.getSPKeystorePassword(), ConfigManager.getSPEntryPassword(), Constants.ENTITY_SP);
+			authRequestSignature = (Signature) Configuration.getBuilderFactory().getBuilder(Signature.DEFAULT_ELEMENT_NAME).buildObject(Signature.DEFAULT_ELEMENT_NAME);
+			authRequestSignature.setSigningCredential(cred);
+			authRequestSignature.setSignatureAlgorithm(SignatureConstants.ALGO_ID_SIGNATURE_RSA_SHA256);
+			authRequestSignature.setCanonicalizationAlgorithm(SignatureConstants.ALGO_ID_C14N_EXCL_OMIT_COMMENTS);
+		      SecurityConfiguration secConfig = Configuration.getGlobalSecurityConfiguration();
+		      try
+		      {
+		         SecurityHelper.prepareSignatureParams(authRequestSignature, cred, secConfig, null);
+		      }
+		      catch (SecurityException e)
+		      {
+		         e.printStackTrace();
+		      }
+		      catch (org.opensaml.xml.security.SecurityException e)
+		      {
+		         e.printStackTrace();
+		      }
+			return authRequestSignature;
 		}
 		
 		return null;
